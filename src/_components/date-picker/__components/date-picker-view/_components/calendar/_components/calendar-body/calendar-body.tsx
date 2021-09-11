@@ -62,7 +62,7 @@ export const CalendarBody = memo(
                           <div
                             // because of lib's ref type
                             // eslint-disable-next-line
-                // @ts-ignore
+                            // @ts-ignore
                             ref={registerChild}
                             key={key}
                             className={cn(`${BLOCK_NAME}__month`)}

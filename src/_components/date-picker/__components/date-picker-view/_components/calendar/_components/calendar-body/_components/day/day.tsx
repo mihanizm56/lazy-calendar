@@ -1,8 +1,8 @@
 /* eslint-disable react/forbid-dom-props */
-import React, { memo, useCallback, useMemo, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useMemo, useRef } from 'react';
 import classnames from 'classnames/bind';
 import { Text } from '@wildberries/ui-kit';
-import { DaysInMonthsType, RegisterFirstMonthDayParamsType } from '@/_types';
+import { DaysInMonthsType } from '@/_types';
 import styles from './day.module.scss';
 
 const cn = classnames.bind(styles);
@@ -22,7 +22,6 @@ export const Day = memo(
       isFirstDayInMonth,
       isLastDayInMonth,
       isSelectedDate,
-      isFirstSelectedDay,
       inlineStyles,
       isDisabled,
       isFirstWeekDay,
@@ -33,12 +32,6 @@ export const Day = memo(
     handleDayClick,
   }: PropsType) => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
-
-    useEffect(() => {
-      if (isFirstSelectedDay && buttonRef.current) {
-        buttonRef.current.scrollIntoView({ block: 'center' });
-      }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const dayFormattedNumber = useMemo(
       () => (dayNumber ? `${dayNumber}` : ''),
