@@ -1,6 +1,6 @@
 /* eslint-disable react/forbid-dom-props */
 /* eslint-disable react/no-array-index-key */
-import React, { memo } from 'react';
+import React, { LegacyRef, memo } from 'react';
 import classnames from 'classnames/bind';
 import { Text } from '@wildberries/ui-kit';
 import {
@@ -21,6 +21,7 @@ type PropsType = {
   monthsInYear: Array<MonthsInYearType>;
   handleDayClick: (date: Date) => void;
   weekDaysLabels: Array<string>;
+  listRef: LegacyRef<List> | undefined;
   getCustomInlineDayStyle?: (
     params: DaysInMonthsType,
   ) => Record<string, string>;
@@ -32,14 +33,14 @@ const cache = new CellMeasurerCache({
 });
 
 export const CalendarBody = memo(
-  ({ monthsInYear, handleDayClick, weekDaysLabels }: PropsType) => {
+  ({ monthsInYear, handleDayClick, weekDaysLabels, listRef }: PropsType) => {
     return (
       <div className={cn(BLOCK_NAME)}>
         <AutoSizer>
           {({ width, height }) => {
             return (
               <List
-                // ref={listRef}
+                ref={listRef}
                 deferredMeasurementCache={cache}
                 height={height}
                 // onRowsRendered={onScroll}

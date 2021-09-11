@@ -1,7 +1,8 @@
-import React, { memo, RefObject, useEffect, useMemo } from 'react';
+import React, { LegacyRef, memo, RefObject, useEffect, useMemo } from 'react';
 import classnames from 'classnames/bind';
 import { CSSTransition } from 'react-transition-group';
 import { Modal } from '@wildberries/ui-kit';
+import { List } from 'react-virtualized';
 import {
   DatePickerTranslationConfig,
   ExtraPatternType,
@@ -47,6 +48,7 @@ type PropsType = {
   intervalPatterns?: Array<ExtraPatternType>;
   onSetPeriod: (params: { startDate: Date; endDate: Date }) => void;
   getCustomInlineDayStyle?: IGetCustomInlineDayStyle;
+  listRef: LegacyRef<List> | undefined;
 };
 
 export const DatePickerView = memo(
@@ -78,6 +80,7 @@ export const DatePickerView = memo(
     intervalPatterns,
     onSetPeriod,
     getCustomInlineDayStyle,
+    listRef,
   }: PropsType) => {
     const decreaseYearButtonDisabled = useMemo(
       () => (dateDownLimit ? dateDownLimit.getFullYear() === year : false),
@@ -152,6 +155,7 @@ export const DatePickerView = memo(
                 onIncreaseYear={onIncreaseYear}
                 weekDaysLabels={translationConfig.weekDaysLabels}
                 year={year}
+                listRef={listRef}
               />
 
               {isInterval && (
@@ -195,6 +199,7 @@ export const DatePickerView = memo(
                 onIncreaseYear={onIncreaseYear}
                 weekDaysLabels={translationConfig.weekDaysLabels}
                 year={year}
+                listRef={listRef}
               />
 
               {isInterval && (

@@ -1,5 +1,6 @@
-import React, { memo } from 'react';
+import React, { LegacyRef, memo } from 'react';
 import classnames from 'classnames/bind';
+import { List } from 'react-virtualized';
 import { MonthsInYearType } from '@/_types';
 import { CalendarHeader } from './_components/calendar-header/calendar-header';
 import { CalendarBody } from './_components/calendar-body/calendar-body';
@@ -18,6 +19,7 @@ type PropsType = {
   onIncreaseYear: () => void;
   increaseButtonDisabled: boolean;
   decreaseButtonDisabled: boolean;
+  listRef: LegacyRef<List> | undefined;
 };
 
 export const Calendar = memo(
@@ -31,6 +33,7 @@ export const Calendar = memo(
     increaseButtonDisabled,
     onDecreaseYear,
     onIncreaseYear,
+    listRef,
   }: PropsType) => {
     return (
       <div className={cn(BLOCK_NAME)}>
@@ -49,6 +52,7 @@ export const Calendar = memo(
             handleDayClick={handleDayClick}
             monthsInYear={monthsInYear}
             weekDaysLabels={weekDaysLabels}
+            listRef={listRef}
           />
         </div>
       </div>

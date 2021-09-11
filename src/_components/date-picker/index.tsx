@@ -1,9 +1,11 @@
-import React, { Component, createRef, RefObject } from 'react';
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
+import React, { Component, createRef, LegacyRef, RefObject } from 'react';
 import {
   Throttler,
   withScreenResizeDetectHoc,
   WithScreenResizePropsType,
 } from '@wildberries/ui-kit';
+import { List } from 'react-virtualized';
 import {
   DatePickerTranslationConfig,
   ExtraPatternType,
@@ -48,7 +50,7 @@ type PropsType = DatePickerPropsType & WithScreenResizePropsType;
 export class WrappedContainer extends Component<PropsType, StateType> {
   containerRef: RefObject<HTMLDivElement>;
 
-  registeredMonthDays: Record<string, RefObject<HTMLButtonElement> | null>;
+  listRef: LegacyRef<List> | undefined;
 
   debouncedSetFirstDate: (date: Date | null, withoutScroll?: boolean) => void;
 
@@ -60,6 +62,7 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     const throttler = new Throttler();
 
     this.containerRef = createRef();
+    this.listRef = createRef();
 
     this.state = {
       year: props.initialYear || new Date().getFullYear(),
@@ -67,8 +70,6 @@ export class WrappedContainer extends Component<PropsType, StateType> {
       startDate: props.startDate || null,
       endDate: props.endDate || null,
     };
-
-    this.registeredMonthDays = {};
 
     this.debouncedSetFirstDate = throttler.createDebounce({
       callback: this.handleSetFirstDate,
@@ -98,6 +99,17 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     window.removeEventListener('click', this.handleOutsideClick);
   }
 
+  scrollToDate = ({ year, month }: { year?: number; month: number }) => {
+    if (this.listRef) {
+      // @ts-ignore
+      this.listRef.current.scrollToRow(month);
+    }
+
+    if (year && year !== this.state.year) {
+      this.setState({ year });
+    }
+  };
+
   handleOutsideClick = ({ target }: MouseEvent): void => {
     if (
       this.props.screenType !== 'mobile' &&
@@ -113,16 +125,24 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     this.setState(prevState => ({
       year: prevState.year - 1,
     }));
+
+    this.scrollToDate({
+      month: 0,
+    });
   };
 
   onIncreaseYear = () => {
     this.setState(prevState => ({
       year: prevState.year + 1,
     }));
+
+    this.scrollToDate({
+      month: 0,
+    });
   };
 
   // todo refactor
-  handleSetFirstDate = (date: Date | null) => {
+  handleSetFirstDate = (date: Date | null, withoutScroll?: boolean) => {
     if (!date) {
       this.setState({
         startDate: null,
@@ -136,10 +156,17 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     this.setState({
       startDate,
     });
+
+    if (!withoutScroll) {
+      this.scrollToDate({
+        month: startDate.getMonth(),
+        year: startDate.getFullYear(),
+      });
+    }
   };
 
   // todo refactor
-  handleSetLastDate = (date: Date | null) => {
+  handleSetLastDate = (date: Date | null, withoutScroll?: boolean) => {
     if (!date) {
       this.setState({
         endDate: null,
@@ -149,11 +176,20 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     }
 
     const endDate = new Date(new Date(date).setHours(23, 59, 59, 999));
+    const year = endDate.getFullYear();
+    const month = endDate.getMonth();
 
     if (!this.state.startDate) {
       this.setState({
         endDate,
       });
+
+      if (!withoutScroll) {
+        this.scrollToDate({
+          year,
+          month,
+        });
+      }
 
       return;
     }
@@ -165,6 +201,13 @@ export class WrappedContainer extends Component<PropsType, StateType> {
       this.setState({
         endDate,
       });
+
+      if (!withoutScroll) {
+        this.scrollToDate({
+          year,
+          month,
+        });
+      }
     }
   };
 
@@ -175,7 +218,7 @@ export class WrappedContainer extends Component<PropsType, StateType> {
 
       if (!this.state.endDate) {
         if (currentDateTimeMs >= startDateTimeMs) {
-          this.handleSetLastDate(date);
+          this.handleSetLastDate(date, true);
 
           return;
         }
@@ -186,14 +229,14 @@ export class WrappedContainer extends Component<PropsType, StateType> {
         );
 
         if (currentDateTimeMs >= medianDateTimeMs) {
-          this.handleSetLastDate(date);
+          this.handleSetLastDate(date, true);
 
           return;
         }
       }
     }
 
-    this.handleSetFirstDate(date);
+    this.handleSetFirstDate(date, true);
   };
 
   handleResetDates = () => {
@@ -223,9 +266,6 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     if (this.props.onClose && this.state.isCalendarOpened) {
       this.props.onClose();
     }
-
-    // clear first month days refs
-    this.registeredMonthDays = {};
   };
 
   handleSetPeriod = ({
@@ -236,7 +276,7 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     endDate: Date;
   }) => {
     this.handleSetFirstDate(startDate);
-    this.handleSetLastDate(endDate);
+    this.handleSetLastDate(endDate, true);
   };
 
   render() {
@@ -269,6 +309,7 @@ export class WrappedContainer extends Component<PropsType, StateType> {
         translationConfig={this.props.translationConfig}
         withIntervalInputs={this.props.withIntervalInputs}
         year={this.state.year}
+        listRef={this.listRef}
       />
     );
   }
