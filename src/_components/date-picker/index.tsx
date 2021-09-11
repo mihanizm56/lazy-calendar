@@ -52,9 +52,9 @@ export class WrappedContainer extends Component<PropsType, StateType> {
 
   listRef: LegacyRef<List> | undefined;
 
-  debouncedSetFirstDate: (date: Date | null, withoutScroll?: boolean) => void;
+  // debouncedSetFirstDate: (date: Date | null, withoutScroll?: boolean) => void;
 
-  debouncedSetLastDate: (date: Date | null, withoutScroll?: boolean) => void;
+  // debouncedSetLastDate: (date: Date | null, withoutScroll?: boolean) => void;
 
   constructor(props: PropsType) {
     super(props);
@@ -71,14 +71,14 @@ export class WrappedContainer extends Component<PropsType, StateType> {
       endDate: props.endDate || null,
     };
 
-    this.debouncedSetFirstDate = throttler.createDebounce({
-      callback: this.handleSetFirstDate,
-      timeoutMs: 100,
-    });
-    this.debouncedSetLastDate = throttler.createDebounce({
-      callback: this.handleSetLastDate,
-      timeoutMs: 100,
-    });
+    // this.debouncedSetFirstDate = throttler.createDebounce({
+    //   callback: this.handleSetFirstDate,
+    //   timeoutMs: 100,
+    // });
+    // this.debouncedSetLastDate = throttler.createDebounce({
+    //   callback: this.handleSetLastDate,
+    //   timeoutMs: 100,
+    // });
   }
 
   componentDidMount() {
@@ -291,8 +291,8 @@ export class WrappedContainer extends Component<PropsType, StateType> {
         handleDayClick={this.handleDayClick}
         handleResetDates={this.handleResetDates}
         handleSetDates={this.handleSetDates}
-        handleSetFirstDate={this.debouncedSetFirstDate}
-        handleSetLastDate={this.debouncedSetLastDate}
+        handleSetFirstDate={this.handleSetFirstDate}
+        handleSetLastDate={this.handleSetLastDate}
         id={this.props.id}
         intervalPatterns={this.props.intervalPatterns}
         isCalendarOpened={this.state.isCalendarOpened}

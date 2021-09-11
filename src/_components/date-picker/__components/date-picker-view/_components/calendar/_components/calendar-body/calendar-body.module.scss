@@ -2,7 +2,7 @@
 
 .CalendarBody {
   box-sizing: border-box;
-  width: 320px;
+  width: 315px;
   height: 100%;
   padding: 0 0 0 16px;
 
@@ -11,6 +11,7 @@
   }
 
   &__month-name {
+    padding-right: 16px;
     margin-bottom: 4px;
     text-align: center;
   }
@@ -25,6 +26,10 @@
   .CalendarBody {
     width: 355px;
     padding: 0 15px;
+
+    &__month-name {
+      padding: 0;
+    }
   }
 }
 

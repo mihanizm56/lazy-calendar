@@ -29,7 +29,7 @@ type PropsType = {
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
-  defaultHeight: 350,
+  defaultHeight: 320,
 });
 
 export const CalendarBody = memo(
