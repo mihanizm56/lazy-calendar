@@ -1,7 +1,14 @@
+/* eslint-disable react/forbid-dom-props */
 /* eslint-disable react/no-array-index-key */
 import React, { memo } from 'react';
 import classnames from 'classnames/bind';
 import { Text } from '@wildberries/ui-kit';
+import {
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+  List,
+} from 'react-virtualized';
 import {
   MonthsInYearType,
   DaysInMonthsType,
@@ -24,6 +31,11 @@ type PropsType = {
   ) => Record<string, string>;
 };
 
+const cache = new CellMeasurerCache({
+  fixedWidth: true,
+  defaultHeight: 300,
+});
+
 export const CalendarBody = memo(
   ({
     monthsInYear,
@@ -33,32 +45,96 @@ export const CalendarBody = memo(
   }: PropsType) => {
     return (
       <div className={cn(BLOCK_NAME)}>
-        {monthsInYear.map(({ monthName, monthDays }, monthIndex) => {
-          return (
-            <div
-              key={`${monthIndex}_monthName`}
-              className={cn(`${BLOCK_NAME}__month`)}
-            >
-              <div className={cn(`${BLOCK_NAME}__month-name`)}>
-                <Text color="black" size="h4" text={monthName} />
-              </div>
+        <AutoSizer>
+          {({ width, height }) => (
+            <List
+              // ref={listRef}
+              deferredMeasurementCache={cache}
+              height={height}
+              // onRowsRendered={onScroll}
+              rowCount={monthsInYear.length}
+              rowHeight={cache.rowHeight}
+              rowRenderer={({ key, index, style: libStyle, parent }) => {
+                const { monthName, monthDays } = monthsInYear[index];
 
-              <div className={cn(`${BLOCK_NAME}__days`)}>
-                <WeekDaysHeaderList weekDaysLabels={weekDaysLabels} />
+                return (
+                  <CellMeasurer
+                    key={key}
+                    cache={cache}
+                    columnIndex={0}
+                    parent={parent}
+                    rowIndex={index}
+                  >
+                    {({ registerChild }) => {
+                      return (
+                        <div
+                          // because of lib's ref type
+                          // eslint-disable-next-line
+                          // @ts-ignore
+                          ref={registerChild}
+                          key={key}
+                          className={cn(`${BLOCK_NAME}__month`)}
+                          style={{ ...libStyle }}
+                        >
+                          <div className={cn(`${BLOCK_NAME}__month-name`)}>
+                            <Text color="black" size="h4" text={monthName} />
+                          </div>
 
-                {monthDays.map((dayParams: DaysInMonthsType, dayIndex) => (
-                  <Day
-                    key={`${monthName}${dayParams.dayNumber}_${dayIndex}`}
-                    dayParams={dayParams}
-                    handleDayClick={handleDayClick}
-                    registerFirstMonthDayRef={registerFirstMonthDayRef}
-                  />
-                ))}
-              </div>
-            </div>
-          );
-        })}
+                          <div className={cn(`${BLOCK_NAME}__days`)}>
+                            <WeekDaysHeaderList
+                              weekDaysLabels={weekDaysLabels}
+                            />
+
+                            {monthDays.map(
+                              (dayParams: DaysInMonthsType, dayIndex) => (
+                                <Day
+                                  key={`${monthName}${dayParams.dayNumber}_${dayIndex}`}
+                                  dayParams={dayParams}
+                                  handleDayClick={handleDayClick}
+                                  registerFirstMonthDayRef={
+                                    registerFirstMonthDayRef
+                                  }
+                                />
+                              ),
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }}
+                  </CellMeasurer>
+                );
+              }}
+              width={width}
+            />
+          )}
+        </AutoSizer>
       </div>
     );
   },
 );
+
+// {monthsInYear.map(({ monthName, monthDays }, monthIndex) => {
+//   return (
+//     <div
+//       key={`${monthIndex}_monthName`}
+//       className={cn(`${BLOCK_NAME}__month`)}
+//     >
+//       <div className={cn(`${BLOCK_NAME}__month-name`)}>
+//         <Text color="black" size="h4" text={monthName} />
+//       </div>
+
+//       <div className={cn(`${BLOCK_NAME}__days`)}>
+//         <WeekDaysHeaderList weekDaysLabels={weekDaysLabels} />
+
+//         {monthDays.map((dayParams: DaysInMonthsType, dayIndex) => (
+//           <Day
+//             key={`${monthName}${dayParams.dayNumber}_${dayIndex}`}
+//             dayParams={dayParams}
+//             handleDayClick={handleDayClick}
+//             registerFirstMonthDayRef={registerFirstMonthDayRef}
+//           />
+//         ))}
+//       </div>
+//     </div>
+//   );
+// })}
