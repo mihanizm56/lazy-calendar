@@ -59,8 +59,6 @@ export class WrappedContainer extends Component<PropsType, StateType> {
   constructor(props: PropsType) {
     super(props);
 
-    const throttler = new Throttler();
-
     this.containerRef = createRef();
     this.listRef = createRef();
 
@@ -70,15 +68,6 @@ export class WrappedContainer extends Component<PropsType, StateType> {
       startDate: props.startDate || null,
       endDate: props.endDate || null,
     };
-
-    // this.debouncedSetFirstDate = throttler.createDebounce({
-    //   callback: this.handleSetFirstDate,
-    //   timeoutMs: 100,
-    // });
-    // this.debouncedSetLastDate = throttler.createDebounce({
-    //   callback: this.handleSetLastDate,
-    //   timeoutMs: 100,
-    // });
   }
 
   componentDidMount() {
@@ -92,6 +81,22 @@ export class WrappedContainer extends Component<PropsType, StateType> {
       !this.props.isInterval
     ) {
       this.handleSetDates();
+    }
+
+    if (
+      prevState.isCalendarOpened !== this.state.isCalendarOpened &&
+      this.state.isCalendarOpened &&
+      this.state.startDate
+    ) {
+      // set macrotask to run scroll right after calendar rendered
+      setTimeout(() => {
+        if (this.state.startDate) {
+          this.scrollToDate({
+            year: this.state?.startDate?.getFullYear(),
+            month: this.state?.startDate?.getMonth(),
+          });
+        }
+      }, 0);
     }
   }
 

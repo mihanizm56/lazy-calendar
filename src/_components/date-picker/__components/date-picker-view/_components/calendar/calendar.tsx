@@ -53,6 +53,7 @@ export const Calendar = memo(
             monthsInYear={monthsInYear}
             weekDaysLabels={weekDaysLabels}
             listRef={listRef}
+            year={year}
           />
         </div>
       </div>
