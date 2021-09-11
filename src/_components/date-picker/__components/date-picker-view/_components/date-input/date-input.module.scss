@@ -1,0 +1,57 @@
+@import "@wildberries/ui-kit/styles/media.module.scss";
+@import "@wildberries/ui-kit/styles/constants.module.scss";
+
+.Date-input {
+  position: relative;
+  width: 100%;
+
+  &--full-width {
+    min-width: 100%;
+  }
+
+  &__icon-button {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    text-align: right;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline-color: $DarkPurple;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+  }
+
+  &--interval {
+    &:not(.Date-input--full-width) {
+      min-width: 250px;
+    }
+  }
+}
+
+
+@media #{$mobile} {
+  .Date-input {
+    &__icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+    }
+  }
+}
+

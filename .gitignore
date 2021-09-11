@@ -1,0 +1,22 @@
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# lib
+/lib
+
+# envs
+/.env
+
+
+# Misc
+.DS_Store
+
+.idea
+.vscode
+.env
+.eslintinfo
+.stylelintinfo

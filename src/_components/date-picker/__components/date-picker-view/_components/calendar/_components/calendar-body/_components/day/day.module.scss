@@ -1,0 +1,85 @@
+@import "@wildberries/ui-kit/styles/media.module.scss";
+@import "@wildberries/ui-kit/styles/constants.module.scss";
+
+.Day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+  // like border behavior but without paddings
+  // https://stackoverflow.com/questions/35678353/how-to-create-collapsed-borders-around-flex-items-and-their-container
+  box-shadow: 1px 0 0 0 $Grey, 0 1px 0 0 $Grey, 1px 1px 0 0 $Grey, /* Just to fix the corner */1px 0 0 0 $Grey inset, 0 1px 0 0 $Grey inset;
+
+  &:hover:not(.Day--is-empty):not(.Day--disabled),
+  &:focus:not(.Day--is-empty) {
+    border: 1px solid $DarkPurple;
+  }
+
+  &--border-right-top {
+    border-radius: 0 4px 0 0;
+  }
+
+  &--border-left-bottom {
+    border-radius: 0 0 0 4px;
+  }
+
+  &--border-left-top {
+    border-radius: 4px 0 0 0;
+  }
+
+  &--border-right-bottom {
+    border-radius: 0 0 4px 0;
+  }
+
+  &--is-selected {
+    background: $LightBlue;
+  }
+
+  &--is-empty {
+    cursor: default;
+    border: none;
+    outline: none;
+    box-shadow: none;
+
+    &:hover,
+    &:focus {
+      background: none;
+    }
+  }
+
+  &--disabled {
+    cursor: default;
+    opacity: .4;
+
+    &:hover,
+    &:focus {
+      background: none;
+    }
+  }
+}
+
+@media #{$mobile} {
+  .Day {
+    width: 46px;
+    height: 46px;
+
+    &:hover:not(.Day--is-empty):not(.Day--disabled),
+    &:focus:not(.Day--is-empty) {
+      border: none;
+    }
+
+  }
+}
+
+@media #{$mobile-small} {
+  .Day {
+    width: 40px;
+    height: 40px;
+  }
+}
+

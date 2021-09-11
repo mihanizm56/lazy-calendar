@@ -1,0 +1,107 @@
+{
+  "name": "@wildberries/service-user-notifications",
+  "version": "0.0.6-beta.2",
+  "description": "user notifications for suppliers portal",
+  "author": "mihanizm56",
+  "typings": "lib/index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "test:watch": "jest --watch",
+    "test": "set CI=true && jest",
+    "test:coverage": "jest --coverage",
+    "alias-resolve": "tscpaths -p tsconfig.json -s ./src -o ./lib",
+    "compile": "rm -fr ./lib && tsc --project tsconfig.json",
+    "lint": "npx eslint . --ext .ts,.js,.tsx --fix --cache --cache-location .eslintinfo && stylelint \"src/**/*.(scss|css)\" --fix --cache --cache-location .stylelintinfo",
+    "commit": "git add . && git commit --no-edit",
+    "release": "npm run commit && git push && npm publish --access=public",
+    "beta": "npm run commit && git push && npm publish --tag beta --access=public",
+    "build": "npm run compile && npm run alias-resolve && bash config/build/helper.sh",
+    "start": "start-storybook -p 3000 -c .storybook watch-css -s ./src --quiet",
+    "build:storybook": "build-storybook",
+    "deploy": "npx @mihanizm56/deploy-tag"
+  },
+  "dependencies": {
+    "@wildberries/ui-kit": "1.0.7",
+    "react-transition-group": "4.4.1",
+    "react-virtualized": "9.22.3",
+    "tscpaths": "0.0.9",
+    "webpackbar": "5.0.0-3",
+    "classnames": "2.2.6"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "8.2.0",
+    "@mihanizm56/deploy-tag": "0.0.6",
+    "@storybook/addon-actions": "6.1.21",
+    "@storybook/addon-console": "1.2.3",
+    "@storybook/addon-docs": "6.1.21",
+    "@storybook/addon-essentials": "6.1.21",
+    "@storybook/addon-knobs": "6.1.21",
+    "@storybook/addon-links": "6.1.21",
+    "@storybook/addon-viewport": "6.1.21",
+    "@storybook/react": "6.1.21",
+    "@types/classnames": "2.2.9",
+    "@types/react": "16.9.11",
+    "@types/react-transition-group": "4.4.0",
+    "@types/react-virtualized": "9.21.11",
+    "@typescript-eslint/eslint-plugin": "2.7.0",
+    "@typescript-eslint/parser": "2.7.0",
+    "body-parser": "1.19.0",
+    "commitizen": "4.0.4",
+    "cross-env": "7.0.2",
+    "cz-customizable": "6.2.0",
+    "eslint": "6.8.0",
+    "eslint-config-airbnb": "18.0.1",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-import-resolver-alias": "1.1.2",
+    "eslint-import-resolver-typescript": "2.0.0",
+    "eslint-plugin-css-modules": "2.11.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.19.0",
+    "eslint-plugin-react-hooks": "2.2.0",
+    "eslint-plugin-security": "1.4.0",
+    "husky": "3.0.9",
+    "jest": "25.1.0",
+    "listr2": "3.8.1",
+    "node-sass": "4.13.1",
+    "normalize.css": "8.0.1",
+    "prettier": "1.19.1",
+    "react": "16.13.0",
+    "react-dom": "16.13.0",
+    "reset-css": "5.0.1",
+    "sass-loader": "10.0.2",
+    "style-loader": "1.2.1",
+    "stylelint": "13.3.3",
+    "stylelint-config-recommended-scss": "4.0.0",
+    "stylelint-config-standard": "19.0.0",
+    "stylelint-order": "3.1.1",
+    "stylelint-scss": "3.12.0",
+    "ts-jest": "25.4.0",
+    "typescript": "4.1.5",
+    "uuid": "8.3.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "config/git/commitizen.js"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "node config/precommit-runner/runner.js && git add .",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS -g config/git/commitlint.js",
+      "prepare-commit-msg": "node ./config/git/prepare-commit.js"
+    }
+  },
+  "files": [
+    "lib/"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

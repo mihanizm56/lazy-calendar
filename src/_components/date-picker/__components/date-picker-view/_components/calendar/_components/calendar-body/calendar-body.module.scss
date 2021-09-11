@@ -1,0 +1,37 @@
+@import "@wildberries/ui-kit/styles/media.module.scss";
+
+.CalendarBody {
+  box-sizing: border-box;
+  width: 300px;
+  padding: 0 16px;
+
+  &__month {
+    margin-bottom: 32px;
+  }
+
+  &__month-name {
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  &__days {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+@media #{$mobile} {
+  .CalendarBody {
+    width: 354px;
+
+    &__days {
+      padding-bottom: 1px;
+    }
+  }
+}
+
+@media #{$mobile-small} {
+  .CalendarBody {
+    width: 312px;
+  }
+}

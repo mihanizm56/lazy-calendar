@@ -1,0 +1,51 @@
+@import "@wildberries/ui-kit/styles/media.module.scss";
+@import "@wildberries/ui-kit/styles/constants.module.scss";
+
+$mobile-width-340: 340px;
+
+$mobile-340: "(max-width: #{$mobile-width-340})";
+
+.Calendar {
+  background: $White;
+
+  &__body {
+    height: 460px;
+    overflow-y: scroll;
+  }
+}
+
+@media #{$mobile} {
+  .Calendar {
+    width: 100%;
+
+    &__header,
+    &__body {
+      display: flex;
+      justify-content: center;
+    }
+
+    &__body {
+      height: 430px;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+@media #{$mobile-small} {
+  .Calendar {
+    &__body {
+      height: 360px;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+
+@media #{$mobile-340} {
+  .Calendar {
+    &__body {
+      height: 250px;
+      margin-bottom: 8px;
+    }
+  }
+}

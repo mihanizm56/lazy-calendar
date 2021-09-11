@@ -1,0 +1,31 @@
+@import "@wildberries/ui-kit/styles/media.module.scss";
+
+.WeekDaysHeaderList {
+  &__weekday {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    min-height: 38px;
+    margin-bottom: 4px;
+  }
+}
+
+@media #{$mobile} {
+  .WeekDaysHeaderList {
+    &__weekday {
+      width: 46px;
+      height: 46px;
+    }
+  }
+}
+
+@media #{$mobile-small} {
+  .WeekDaysHeaderList {
+    &__weekday {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+

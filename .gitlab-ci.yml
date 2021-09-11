@@ -1,0 +1,79 @@
+image: node:12.18-alpine3.10
+
+stages:
+  - install
+  - main_tests_bundle
+  - release
+
+install:
+  tags:
+    - linux
+  stage: install
+  allow_failure: false
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+
+# tests:
+#   tags:
+#     - baremetal-linux
+#   stage: main_tests_bundle
+#   script:
+#     - npm test
+
+lint:
+  tags:
+    - baremetal-linux
+  stage: main_tests_bundle
+  script:
+    - npm run lint
+
+build:
+  tags:
+    - linux
+  stage: main_tests_bundle
+  script:
+    - set CI=true && npm run build
+  artifacts:
+    paths:
+      - lib/
+
+release_beta:
+  stage: release
+  tags:
+    - linux
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_COMMIT_TAG =~ /^\d+\.\d+\.\d+-beta\.\d+$/'
+      when: on_success
+  script:
+    - npm version $CI_COMMIT_TAG
+    - echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
+    - npm publish --tag beta
+
+release_stable:
+  stage: release
+  tags:
+    - linux
+  rules:
+    - if: '$CI_COMMIT_TAG && $CI_COMMIT_TAG =~ /^\d+\.\d+\.\d+$/'
+      when: on_success
+  script:
+    - npm version $CI_COMMIT_TAG
+    - echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
+    - npm publish
+
+pages:
+  tags:
+    - baremetal-linux
+  stage: release
+  script:
+    - echo "VERSION=$CI_COMMIT_TAG" >> .env
+    - npm run build-storybook-static
+  artifacts:
+    paths:
+      - public # GitLab pages serve from a 'public' directory
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: on_success
