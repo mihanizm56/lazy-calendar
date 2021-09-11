@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import classnames from 'classnames/bind';
-import { MonthsInYearType, RegisterFirstMonthDayParamsType } from '@/_types';
+import { MonthsInYearType } from '@/_types';
 import { CalendarHeader } from './_components/calendar-header/calendar-header';
 import { CalendarBody } from './_components/calendar-body/calendar-body';
 import styles from './calendar.module.scss';

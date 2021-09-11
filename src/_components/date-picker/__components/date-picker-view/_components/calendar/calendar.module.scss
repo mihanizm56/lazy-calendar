@@ -6,6 +6,7 @@ $mobile-width-340: 340px;
 $mobile-340: "(max-width: #{$mobile-width-340})";
 
 .Calendar {
+  padding: 0;
   background: $White;
 
   &__body {

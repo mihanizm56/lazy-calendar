@@ -28,8 +28,7 @@ type PropsType = {
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
-  defaultHeight: 300,
-  defaultWidth: 320,
+  defaultHeight: 350,
 });
 
 export const CalendarBody = memo(
@@ -102,29 +101,3 @@ export const CalendarBody = memo(
     );
   },
 );
-
-// {monthsInYear.map(({ monthName, monthDays }, monthIndex) => {
-//   return (
-//     <div
-//       key={`${monthIndex}_monthName`}
-//       className={cn(`${BLOCK_NAME}__month`)}
-//     >
-//       <div className={cn(`${BLOCK_NAME}__month-name`)}>
-//         <Text color="black" size="h4" text={monthName} />
-//       </div>
-
-//       <div className={cn(`${BLOCK_NAME}__days`)}>
-//         <WeekDaysHeaderList weekDaysLabels={weekDaysLabels} />
-
-//         {monthDays.map((dayParams: DaysInMonthsType, dayIndex) => (
-//           <Day
-//             key={`${monthName}${dayParams.dayNumber}_${dayIndex}`}
-//             dayParams={dayParams}
-//             handleDayClick={handleDayClick}
-//             registerFirstMonthDayRef={registerFirstMonthDayRef}
-//           />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// })}
