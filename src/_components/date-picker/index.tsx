@@ -75,6 +75,10 @@ export class WrappedContainer extends Component<PropsType, StateType> {
   }
 
   componentDidUpdate(prevProps: PropsType, prevState: StateType) {
+    const isOpening =
+      prevState.isCalendarOpened !== this.state.isCalendarOpened &&
+      this.state.isCalendarOpened;
+
     // if not interval - close after date was set
     if (
       prevState.startDate !== this.state.startDate &&
@@ -83,20 +87,21 @@ export class WrappedContainer extends Component<PropsType, StateType> {
       this.handleSetDates();
     }
 
-    if (
-      prevState.isCalendarOpened !== this.state.isCalendarOpened &&
-      this.state.isCalendarOpened &&
-      this.state.startDate
-    ) {
-      // set macrotask to run scroll right after calendar rendered
-      setTimeout(() => {
-        if (this.state.startDate) {
-          this.scrollToDate({
-            year: this.state?.startDate?.getFullYear(),
-            month: this.state?.startDate?.getMonth(),
-          });
-        }
-      }, 0);
+    if (isOpening) {
+      if (this.state.startDate) {
+        // if openinig calendar and there is start date
+        // set macrotask to run scroll right after calendar rendered
+        setTimeout(() => {
+          if (this.state.startDate) {
+            this.scrollToDate({
+              year: this.state?.startDate?.getFullYear(),
+              month: this.state?.startDate?.getMonth(),
+            });
+          }
+        }, 0);
+      } else {
+        this.resetYear();
+      }
     }
   }
 
@@ -126,7 +131,7 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     }
   };
 
-  onDecreaseYear = () => {
+  decreaseYear = () => {
     this.setState(prevState => ({
       year: prevState.year - 1,
     }));
@@ -136,7 +141,7 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     });
   };
 
-  onIncreaseYear = () => {
+  increaseYear = () => {
     this.setState(prevState => ({
       year: prevState.year + 1,
     }));
@@ -144,6 +149,10 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     this.scrollToDate({
       month: 0,
     });
+  };
+
+  resetYear = () => {
+    this.setState({ year: this.props.initialYear || new Date().getFullYear() });
   };
 
   // todo refactor
@@ -306,8 +315,8 @@ export class WrappedContainer extends Component<PropsType, StateType> {
         isMobile={this.props.screenType === 'mobile'}
         locale={this.props.locale}
         name={this.props.name}
-        onDecreaseYear={this.onDecreaseYear}
-        onIncreaseYear={this.onIncreaseYear}
+        onDecreaseYear={this.decreaseYear}
+        onIncreaseYear={this.increaseYear}
         onSetPeriod={this.handleSetPeriod}
         onToggleCalendar={this.handleToggleCalendar}
         startDate={this.state.startDate}

@@ -53,6 +53,7 @@ export const CalendarBody = memo(
             return (
               <List
                 ref={listRef}
+                className={cn(`${BLOCK_NAME}__list`)}
                 deferredMeasurementCache={cache}
                 height={height}
                 // onRowsRendered={onScroll}
