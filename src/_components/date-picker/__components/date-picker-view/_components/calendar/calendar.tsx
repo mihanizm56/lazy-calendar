@@ -18,7 +18,6 @@ type PropsType = {
   onIncreaseYear: () => void;
   increaseButtonDisabled: boolean;
   decreaseButtonDisabled: boolean;
-  registerFirstMonthDayRef: (params: RegisterFirstMonthDayParamsType) => void;
 };
 
 export const Calendar = memo(
@@ -32,7 +31,6 @@ export const Calendar = memo(
     increaseButtonDisabled,
     onDecreaseYear,
     onIncreaseYear,
-    registerFirstMonthDayRef,
   }: PropsType) => {
     return (
       <div className={cn(BLOCK_NAME)}>
@@ -50,7 +48,6 @@ export const Calendar = memo(
           <CalendarBody
             handleDayClick={handleDayClick}
             monthsInYear={monthsInYear}
-            registerFirstMonthDayRef={registerFirstMonthDayRef}
             weekDaysLabels={weekDaysLabels}
           />
         </div>

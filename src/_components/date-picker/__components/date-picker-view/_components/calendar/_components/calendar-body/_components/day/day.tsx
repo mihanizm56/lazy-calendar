@@ -10,7 +10,6 @@ const BLOCK_NAME = 'Day';
 
 type PropsType = {
   handleDayClick: (date: Date) => void;
-  registerFirstMonthDayRef: (params: RegisterFirstMonthDayParamsType) => void;
   dayParams: DaysInMonthsType;
 };
 
@@ -32,29 +31,12 @@ export const Day = memo(
       isLastWeekDay,
     },
     handleDayClick,
-    registerFirstMonthDayRef,
   }: PropsType) => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
 
     useEffect(() => {
       if (isFirstSelectedDay && buttonRef.current) {
         buttonRef.current.scrollIntoView({ block: 'center' });
-      }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    useEffect(() => {
-      if (isFirstDayInMonth && dateOfThisDay) {
-        registerFirstMonthDayRef({
-          ref: buttonRef,
-          month: dateOfThisDay.getMonth(),
-        });
-
-        return () => {
-          registerFirstMonthDayRef({
-            ref: null,
-            month: dateOfThisDay.getMonth(),
-          });
-        };
       }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

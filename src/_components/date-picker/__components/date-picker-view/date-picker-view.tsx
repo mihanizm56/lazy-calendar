@@ -10,9 +10,9 @@ import {
 } from '@/_types';
 import { Calendar } from './_components/calendar/calendar';
 import { DatePickerMenu } from './_components/date-picker-menu/date-picker-menu';
-import styles from './date-picker-view.module.scss';
 import { getMonthsInYear } from './_utils/get-months-in-year';
 import { DateInput } from './_components/date-input/date-input';
+import styles from './date-picker-view.module.scss';
 
 const cn = classnames.bind(styles);
 const BLOCK_NAME = 'DatePickerView';
@@ -44,7 +44,6 @@ type PropsType = {
   onDecreaseYear: () => void;
   onIncreaseYear: () => void;
   locale?: string;
-  registerFirstMonthDayRef: (params: RegisterFirstMonthDayParamsType) => void;
   intervalPatterns?: Array<ExtraPatternType>;
   onSetPeriod: (params: { startDate: Date; endDate: Date }) => void;
   getCustomInlineDayStyle?: IGetCustomInlineDayStyle;
@@ -76,7 +75,6 @@ export const DatePickerView = memo(
     onDecreaseYear,
     onIncreaseYear,
     locale = 'ru',
-    registerFirstMonthDayRef,
     intervalPatterns,
     onSetPeriod,
     getCustomInlineDayStyle,
@@ -152,7 +150,6 @@ export const DatePickerView = memo(
                 onCloseCalendar={onToggleCalendar}
                 onDecreaseYear={onDecreaseYear}
                 onIncreaseYear={onIncreaseYear}
-                registerFirstMonthDayRef={registerFirstMonthDayRef}
                 weekDaysLabels={translationConfig.weekDaysLabels}
                 year={year}
               />
@@ -196,7 +193,6 @@ export const DatePickerView = memo(
                 onCloseCalendar={onToggleCalendar}
                 onDecreaseYear={onDecreaseYear}
                 onIncreaseYear={onIncreaseYear}
-                registerFirstMonthDayRef={registerFirstMonthDayRef}
                 weekDaysLabels={translationConfig.weekDaysLabels}
                 year={year}
               />

@@ -9,11 +9,7 @@ import {
   CellMeasurerCache,
   List,
 } from 'react-virtualized';
-import {
-  MonthsInYearType,
-  DaysInMonthsType,
-  RegisterFirstMonthDayParamsType,
-} from '@/_types';
+import { MonthsInYearType, DaysInMonthsType } from '@/_types';
 import { WeekDaysHeaderList } from './_components/week-days-header-list/week-days-header-list';
 import { Day } from './_components/day/day';
 import styles from './calendar-body.module.scss';
@@ -25,7 +21,6 @@ type PropsType = {
   monthsInYear: Array<MonthsInYearType>;
   handleDayClick: (date: Date) => void;
   weekDaysLabels: Array<string>;
-  registerFirstMonthDayRef: (params: RegisterFirstMonthDayParamsType) => void;
   getCustomInlineDayStyle?: (
     params: DaysInMonthsType,
   ) => Record<string, string>;
@@ -34,79 +29,74 @@ type PropsType = {
 const cache = new CellMeasurerCache({
   fixedWidth: true,
   defaultHeight: 300,
+  defaultWidth: 320,
 });
 
 export const CalendarBody = memo(
-  ({
-    monthsInYear,
-    handleDayClick,
-    weekDaysLabels,
-    registerFirstMonthDayRef,
-  }: PropsType) => {
+  ({ monthsInYear, handleDayClick, weekDaysLabels }: PropsType) => {
     return (
       <div className={cn(BLOCK_NAME)}>
         <AutoSizer>
-          {({ width, height }) => (
-            <List
-              // ref={listRef}
-              deferredMeasurementCache={cache}
-              height={height}
-              // onRowsRendered={onScroll}
-              rowCount={monthsInYear.length}
-              rowHeight={cache.rowHeight}
-              rowRenderer={({ key, index, style: libStyle, parent }) => {
-                const { monthName, monthDays } = monthsInYear[index];
+          {({ width, height }) => {
+            return (
+              <List
+                // ref={listRef}
+                deferredMeasurementCache={cache}
+                height={height}
+                // onRowsRendered={onScroll}
+                rowCount={monthsInYear.length}
+                rowHeight={cache.rowHeight}
+                rowRenderer={({ key, index, style: libStyle, parent }) => {
+                  const { monthName, monthDays } = monthsInYear[index];
 
-                return (
-                  <CellMeasurer
-                    key={key}
-                    cache={cache}
-                    columnIndex={0}
-                    parent={parent}
-                    rowIndex={index}
-                  >
-                    {({ registerChild }) => {
-                      return (
-                        <div
-                          // because of lib's ref type
-                          // eslint-disable-next-line
-                          // @ts-ignore
-                          ref={registerChild}
-                          key={key}
-                          className={cn(`${BLOCK_NAME}__month`)}
-                          style={{ ...libStyle }}
-                        >
-                          <div className={cn(`${BLOCK_NAME}__month-name`)}>
-                            <Text color="black" size="h4" text={monthName} />
+                  return (
+                    <CellMeasurer
+                      key={key}
+                      cache={cache}
+                      columnIndex={0}
+                      parent={parent}
+                      rowIndex={index}
+                    >
+                      {({ registerChild }) => {
+                        return (
+                          <div
+                            // because of lib's ref type
+                            // eslint-disable-next-line
+                // @ts-ignore
+                            ref={registerChild}
+                            key={key}
+                            className={cn(`${BLOCK_NAME}__month`)}
+                            style={{ ...libStyle }}
+                          >
+                            <div className={cn(`${BLOCK_NAME}__month-name`)}>
+                              <Text color="black" size="h4" text={monthName} />
+                            </div>
+
+                            <div className={cn(`${BLOCK_NAME}__days`)}>
+                              <WeekDaysHeaderList
+                                weekDaysLabels={weekDaysLabels}
+                              />
+
+                              {monthDays.map(
+                                (dayParams: DaysInMonthsType, dayIndex) => (
+                                  <Day
+                                    key={`${monthName}${dayParams.dayNumber}_${dayIndex}`}
+                                    dayParams={dayParams}
+                                    handleDayClick={handleDayClick}
+                                  />
+                                ),
+                              )}
+                            </div>
                           </div>
-
-                          <div className={cn(`${BLOCK_NAME}__days`)}>
-                            <WeekDaysHeaderList
-                              weekDaysLabels={weekDaysLabels}
-                            />
-
-                            {monthDays.map(
-                              (dayParams: DaysInMonthsType, dayIndex) => (
-                                <Day
-                                  key={`${monthName}${dayParams.dayNumber}_${dayIndex}`}
-                                  dayParams={dayParams}
-                                  handleDayClick={handleDayClick}
-                                  registerFirstMonthDayRef={
-                                    registerFirstMonthDayRef
-                                  }
-                                />
-                              ),
-                            )}
-                          </div>
-                        </div>
-                      );
-                    }}
-                  </CellMeasurer>
-                );
-              }}
-              width={width}
-            />
-          )}
+                        );
+                      }}
+                    </CellMeasurer>
+                  );
+                }}
+                width={width}
+              />
+            );
+          }}
         </AutoSizer>
       </div>
     );

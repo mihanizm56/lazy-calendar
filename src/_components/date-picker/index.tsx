@@ -9,7 +9,6 @@ import {
   ExtraPatternType,
   IGetCustomInlineDayStyle,
   OnDatePickedChangeParamsType,
-  RegisterFirstMonthDayParamsType,
 } from '@/_types';
 import { DatePickerView } from './__components/date-picker-view/date-picker-view';
 
@@ -99,25 +98,6 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     window.removeEventListener('click', this.handleOutsideClick);
   }
 
-  scrollToDate = ({ year, month }: { year?: number; month: number }) => {
-    const dayButtonRef = this.registeredMonthDays[month];
-
-    if (dayButtonRef && dayButtonRef.current) {
-      dayButtonRef.current.scrollIntoView({ block: 'center' });
-    }
-
-    if (year && year !== this.state.year) {
-      this.setState({ year });
-    }
-  };
-
-  registerFirstMonthDayRef = ({
-    month,
-    ref,
-  }: RegisterFirstMonthDayParamsType) => {
-    this.registeredMonthDays[`${month}`] = ref;
-  };
-
   handleOutsideClick = ({ target }: MouseEvent): void => {
     if (
       this.props.screenType !== 'mobile' &&
@@ -133,24 +113,16 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     this.setState(prevState => ({
       year: prevState.year - 1,
     }));
-
-    this.scrollToDate({
-      month: 0,
-    });
   };
 
   onIncreaseYear = () => {
     this.setState(prevState => ({
       year: prevState.year + 1,
     }));
-
-    this.scrollToDate({
-      month: 0,
-    });
   };
 
   // todo refactor
-  handleSetFirstDate = (date: Date | null, withoutScroll?: boolean) => {
+  handleSetFirstDate = (date: Date | null) => {
     if (!date) {
       this.setState({
         startDate: null,
@@ -164,17 +136,10 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     this.setState({
       startDate,
     });
-
-    if (!withoutScroll) {
-      this.scrollToDate({
-        month: startDate.getMonth(),
-        year: startDate.getFullYear(),
-      });
-    }
   };
 
   // todo refactor
-  handleSetLastDate = (date: Date | null, withoutScroll?: boolean) => {
+  handleSetLastDate = (date: Date | null) => {
     if (!date) {
       this.setState({
         endDate: null,
@@ -184,20 +149,11 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     }
 
     const endDate = new Date(new Date(date).setHours(23, 59, 59, 999));
-    const year = endDate.getFullYear();
-    const month = endDate.getMonth();
 
     if (!this.state.startDate) {
       this.setState({
         endDate,
       });
-
-      if (!withoutScroll) {
-        this.scrollToDate({
-          year,
-          month,
-        });
-      }
 
       return;
     }
@@ -209,13 +165,6 @@ export class WrappedContainer extends Component<PropsType, StateType> {
       this.setState({
         endDate,
       });
-
-      if (!withoutScroll) {
-        this.scrollToDate({
-          year,
-          month,
-        });
-      }
     }
   };
 
@@ -226,7 +175,7 @@ export class WrappedContainer extends Component<PropsType, StateType> {
 
       if (!this.state.endDate) {
         if (currentDateTimeMs >= startDateTimeMs) {
-          this.handleSetLastDate(date, true);
+          this.handleSetLastDate(date);
 
           return;
         }
@@ -237,14 +186,14 @@ export class WrappedContainer extends Component<PropsType, StateType> {
         );
 
         if (currentDateTimeMs >= medianDateTimeMs) {
-          this.handleSetLastDate(date, true);
+          this.handleSetLastDate(date);
 
           return;
         }
       }
     }
 
-    this.handleSetFirstDate(date, true);
+    this.handleSetFirstDate(date);
   };
 
   handleResetDates = () => {
@@ -287,7 +236,7 @@ export class WrappedContainer extends Component<PropsType, StateType> {
     endDate: Date;
   }) => {
     this.handleSetFirstDate(startDate);
-    this.handleSetLastDate(endDate, true);
+    this.handleSetLastDate(endDate);
   };
 
   render() {
@@ -316,7 +265,6 @@ export class WrappedContainer extends Component<PropsType, StateType> {
         onIncreaseYear={this.onIncreaseYear}
         onSetPeriod={this.handleSetPeriod}
         onToggleCalendar={this.handleToggleCalendar}
-        registerFirstMonthDayRef={this.registerFirstMonthDayRef}
         startDate={this.state.startDate}
         translationConfig={this.props.translationConfig}
         withIntervalInputs={this.props.withIntervalInputs}
