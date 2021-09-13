@@ -1,13 +1,15 @@
 @import "@wildberries/ui-kit/lib/styles/media.module.scss";
 
 .DatePickerMenuInput {
-  padding-bottom: 23px;
+  padding-bottom: 18px;
 
   &--error {
     padding-bottom: 0;
   }
 
   &__label {
+    display: flex;
+    align-items: flex-start;
     padding-bottom: 8px;
   }
 }

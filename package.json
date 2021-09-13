@@ -1,6 +1,6 @@
 {
   "name": "@wildberries/lazy-calendar",
-  "version": "0.0.1-beta.3",
+  "version": "0.0.1-beta.4",
   "description": "user notifications for suppliers portal",
   "author": "mihanizm56",
   "typings": "lib/index.d.ts",
